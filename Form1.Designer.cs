@@ -46,7 +46,7 @@
             // 
             // Btn_NcCreate
             // 
-            this.Btn_NcCreate.Location = new System.Drawing.Point(199, 37);
+            this.Btn_NcCreate.Location = new System.Drawing.Point(93, 12);
             this.Btn_NcCreate.Name = "Btn_NcCreate";
             this.Btn_NcCreate.Size = new System.Drawing.Size(75, 36);
             this.Btn_NcCreate.TabIndex = 0;

@@ -52,6 +52,25 @@ namespace ncCreate
             // Go through list and copy all Outside lines/arcs to outside list
             List<string> outsideEntities = new List<string>();
 
+            /// dxf file info
+            /// LINE
+            /// 10 - start x
+            /// 20 - start y
+            /// 30 - start z - should always be zero for us
+            /// 11 - end x
+            /// 21 - end y
+            /// 8 - layer
+            /// 
+            /// ARC
+            /// 8 - layer
+            /// 10 - start x
+            /// 20 - start y
+            /// 40 - radius
+            /// 50 - start angle
+            /// 51 - end angle
+            /// 
+            
+            
             for (int i=1; i< convertLength; i+=1)
             {
                 // Get current line on list
@@ -61,15 +80,15 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("IX" + Math.Round(Convert.ToDouble(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 14]), 4));
-                        outsideEntities.Add("IX" + Math.Round(Convert.ToDouble(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 20]), 4));
+                        outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
+                        //outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
 
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("OX" + Math.Round(Convert.ToDouble(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 14]), 4));
-                        outsideEntities.Add("OX" + Math.Round(Convert.ToDouble(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 20]), 4));
+                        outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
+                        //outsideEntities.Add("OX" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
                     }
                 }
 
@@ -77,12 +96,12 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("iARC X" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
+                        outsideEntities.Add("i" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("oARC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+                        outsideEntities.Add("arc " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
                     }
                 }
 
@@ -90,7 +109,7 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("iCIRC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+                        outsideEntities.Add("iCIRC X" + Math.Round(Convert.ToDecimal(convertList[i + 12]),4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]),4) + " R" + convertList[i + 18]);
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
@@ -99,7 +118,8 @@ namespace ncCreate
 
                     }
                 }
-                
+                int number = 27;
+                outsideEntities.Add((Decimal.Round(number), 5).ToString());
 
             }
 
@@ -110,6 +130,33 @@ namespace ncCreate
             converted_code.Lines = outsideEntities.ToArray();
         }
 
-       
+        public string x = "0.0000";
+        public void CircleData(string xcen, string ycen, string r)
+        {
+            /// CIRCLE
+            /// 8 - layer
+            /// 10 - center x
+            /// 20 - center y
+            /// 40 - radius
+            /// 10 = 1.5
+            /// 20 = 3.5
+            /// 40 = 0.25
+            /// Need:
+            /// x = 1.25
+            /// y = 3.5
+            /// I = 0.25
+            /// J = 0.0005
+            /// 
+            /// X = Center(10) - radius(40)
+            /// Y = Center(20)
+            /// I = radius(40)
+            /*
+            decimal centerX = Convert.ToDecimal(xcen, 4);
+            decimal centerY = Convert.ToDecimal(ycen, 4);
+            decimal radius = Convert.ToDecimal(r, 4);
+            decimal xCircleStart = centerX - radius;
+           */
+        }
+
     }
 }
