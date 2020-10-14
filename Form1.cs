@@ -29,7 +29,7 @@ namespace ncCreate
             var openFileDialog1 = new OpenFileDialog();
 
             // Filter the results so you only see .nc files and text files
-            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.Filter = "dxf files (*.dxf)|*.dxf|All files (*.*)|*.*";
 
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -59,42 +59,43 @@ namespace ncCreate
 
                 if (current == "LINE")
                 {
-                    if (convertList[i + 4] == "INSIDE")
+                    if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("IN X" + convertList[i + 6] + " Y" + convertList[i + 8]);
-                        outsideEntities.Add("IN X" + convertList[i + 6] + " Y" + convertList[i + 8]);
+                        outsideEntities.Add("IN X" + convertList[i + 12] + " Y" + convertList[i + 14]);
+                        outsideEntities.Add("IN X" + convertList[i + 18] + " Y" + convertList[i + 20]);
                     }
 
-                    if (convertList[i + 4] == "OUTSIDE")
+                    if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("IN X" + convertList[i + 6] + " Y" + convertList[i + 8]);
-                        outsideEntities.Add("IN X" + convertList[i + 6] + " Y" + convertList[i + 8]);
+                        outsideEntities.Add("OUT X" + convertList[i + 12] + " Y" + convertList[i + 14]);
+                        outsideEntities.Add("OUT X" + convertList[i + 18] + " Y" + convertList[i + 20]);
                     }
                 }
 
                 if (current == "ARC")
                 {
-                    if (convertList[i + 4] == "INSIDE")
+                    if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("INARC X" + convertList[i + 6] + " Y" + convertList[i + 8] + " R" + convertList[i + 12]);
+                        outsideEntities.Add("iARC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
                     }
 
-                    if (convertList[i + 4] == "OUTSIDE")
+                    if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("INARC X" + convertList[i + 6] + " Y" + convertList[i + 8] + " R" + convertList[i + 12]);
+                        outsideEntities.Add("oARC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
                     }
                 }
 
                 if (current == "CIRCLE")
                 {
-                    if (convertList[i + 5] == "INSIDE")
+                    if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("INCIRC X" + convertList[i + 6] + " Y" + convertList[i + 8] + " R" + convertList[i + 12]);
+                        outsideEntities.Add("iCIRC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
                     }
 
-                    if (convertList[i + 5] == "OUTSIDE")
+                    if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("INCIRC X" + convertList[i + 6] + " Y" + convertList[i + 8] + " R" + convertList[i + 12]);
+                        outsideEntities.Add("oCIRC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+
                     }
                 }
                 
