@@ -61,14 +61,15 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("IN X" + convertList[i + 12] + " Y" + convertList[i + 14]);
-                        outsideEntities.Add("IN X" + convertList[i + 18] + " Y" + convertList[i + 20]);
+                        outsideEntities.Add("IX" + Math.Round(Convert.ToDouble(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 14]), 4));
+                        outsideEntities.Add("IX" + Math.Round(Convert.ToDouble(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 20]), 4));
+
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("OUT X" + convertList[i + 12] + " Y" + convertList[i + 14]);
-                        outsideEntities.Add("OUT X" + convertList[i + 18] + " Y" + convertList[i + 20]);
+                        outsideEntities.Add("OX" + Math.Round(Convert.ToDouble(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 14]), 4));
+                        outsideEntities.Add("OX" + Math.Round(Convert.ToDouble(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDouble(convertList[i + 20]), 4));
                     }
                 }
 
@@ -76,7 +77,7 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("iARC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+                        outsideEntities.Add("iARC X" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
@@ -108,5 +109,7 @@ namespace ncCreate
             outsideEntities.Add("G50");
             converted_code.Lines = outsideEntities.ToArray();
         }
+
+       
     }
 }
