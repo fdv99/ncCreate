@@ -102,6 +102,10 @@ namespace ncCreate
 
             }
 
+            outsideEntities.Add("G93 X0.0Y0.0Z0.0");
+            outsideEntities.Add("G130");
+            outsideEntities.Add("/M707");
+            outsideEntities.Add("G50");
             converted_code.Lines = outsideEntities.ToArray();
         }
     }
