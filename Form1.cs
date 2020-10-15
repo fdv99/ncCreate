@@ -80,15 +80,15 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
-                        //outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
+                        outsideEntities.Add("IS x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
+                        outsideEntities.Add("IF x" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
 
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add(Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
-                        //outsideEntities.Add("OX" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
+                        outsideEntities.Add("OS X" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
+                        outsideEntities.Add("OF X" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
                     }
                 }
 
@@ -96,12 +96,21 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("i" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
+                        outsideEntities.Add("IA x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("arc " + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
+                        outsideEntities.Add("OA x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + 
+                            " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + 
+                            " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + 
+                            " SA" + Math.Round(Convert.ToDecimal(convertList[i + 22]), 4) +
+                            " EA" + Math.Round(Convert.ToDecimal(convertList[i + 24]), 4));
+
+                        // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
+                        // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
+                        // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
+                        // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
                     }
                 }
 
@@ -109,17 +118,15 @@ namespace ncCreate
                 {
                     if (convertList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("iCIRC X" + Math.Round(Convert.ToDecimal(convertList[i + 12]),4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]),4) + " R" + convertList[i + 18]);
+                        outsideEntities.Add("IC x" + Math.Round(Convert.ToDecimal(convertList[i + 12]),4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]),4) + " R" + convertList[i + 18]);
                     }
 
                     if (convertList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("oCIRC X" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+                        outsideEntities.Add("OC x" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
 
                     }
                 }
-                int number = 27;
-                outsideEntities.Add((Decimal.Round(number), 5).ToString());
 
             }
 
@@ -131,32 +138,60 @@ namespace ncCreate
         }
 
         public string x = "0.0000";
-        public void CircleData(string xcen, string ycen, string r)
+        public void CircleData()
         {
             /// CIRCLE
             /// 8 - layer
             /// 10 - center x
             /// 20 - center y
             /// 40 - radius
-            /// 10 = 1.5
-            /// 20 = 3.5
-            /// 40 = 0.25
-            /// Need:
-            /// x = 1.25
-            /// y = 3.5
-            /// I = 0.25
-            /// J = 0.0005
-            /// 
+            /// 50 - Start Angle
+            /// 51 - End Angle
+            
             /// X = Center(10) - radius(40)
             /// Y = Center(20)
             /// I = radius(40)
-            /*
-            decimal centerX = Convert.ToDecimal(xcen, 4);
-            decimal centerY = Convert.ToDecimal(ycen, 4);
-            decimal radius = Convert.ToDecimal(r, 4);
-            decimal xCircleStart = centerX - radius;
-           */
+            /// J = Y direction distance from starting point to arc center
+           
+            /// We will always pierce at center and move left to quad, then run the x, y, i, j command
         }
 
+        public void ArcData()
+        {
+            /// Pass in these variables:
+            
+            /// ARC
+            /// 8 - layer
+            /// 10 - center x
+            /// 20 - center y
+            /// 40 - radius
+            /// 50 - start angle
+            /// 51 - end angle
+           
+            /// Convert these variable to the start and end points:
+            
+            // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
+            // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
+            // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
+            // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
+
+            /// save these points for use in code 
+        }
+
+        public void LineData()
+        {
+            /// Pass in these variables:
+
+            /// Line
+            /// 8 - layer
+            /// 10 - x1
+            /// 20 - y1
+            /// 11 - x2
+            /// 21 - y2
+
+            /// Convert these variable to the start and end points:
+
+            /// save these points for use in code 
+        }
     }
 }
