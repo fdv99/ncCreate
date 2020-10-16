@@ -41,104 +41,66 @@ namespace ncCreate
             }
         }
 
+        List<string> dxfList = new List<string>();
+        List<string> coordinateList = new List<string>();
+
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
             // Convert the original file to a list
-            List<string> convertList = File.ReadAllLines(ncFileName).ToList();
+            dxfList = File.ReadAllLines(ncFileName).ToList();
 
             // Get the number of lines in List
-            int convertLength = convertList.Count;
+            int convertLength = dxfList.Count;
 
             // Go through list and copy all Outside lines/arcs to outside list
-            List<string> outsideEntities = new List<string>();
-
-            /// dxf file info
-            /// LINE
-            /// 10 - start x
-            /// 20 - start y
-            /// 30 - start z - should always be zero for us
-            /// 11 - end x
-            /// 21 - end y
-            /// 8 - layer
-            /// 
-            /// ARC
-            /// 8 - layer
-            /// 10 - start x
-            /// 20 - start y
-            /// 40 - radius
-            /// 50 - start angle
-            /// 51 - end angle
-            /// 
-            
+            //List<string> coordinateList = new List<string>();          
             
             for (int i=1; i< convertLength; i+=1)
             {
                 // Get current line on list
-                string current = convertList[i];
+                string current = dxfList[i];
 
                 if (current == "LINE")
                 {
-                    if (convertList[i + 8] == "INSIDE")
-                    {
-                        outsideEntities.Add("IS x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
-                        outsideEntities.Add("IF x" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
-
-                    }
-
-                    if (convertList[i + 8] == "OUTSIDE")
-                    {
-                        outsideEntities.Add("OS X" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4));
-                        outsideEntities.Add("OF X" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 20]), 4));
-                    }
+                    /// Call Line Data Method
+                    /// Pass in i so we know how to offset to get info needed
+                    LineData(i);
+                    
                 }
 
                 if (current == "ARC")
                 {
-                    if (convertList[i + 8] == "INSIDE")
-                    {
-                        outsideEntities.Add("IA x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4));
-                    }
-
-                    if (convertList[i + 8] == "OUTSIDE")
-                    {
-                        outsideEntities.Add("OA x" + Math.Round(Convert.ToDecimal(convertList[i + 12]), 4) + 
-                            " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]), 4) + 
-                            " R" + Math.Round(Convert.ToDecimal(convertList[i + 18]), 4) + 
-                            " SA" + Math.Round(Convert.ToDecimal(convertList[i + 22]), 4) +
-                            " EA" + Math.Round(Convert.ToDecimal(convertList[i + 24]), 4));
-
-                        // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
-                        // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
-                        // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
-                        // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
-                    }
+                    ArcData(i);
                 }
 
                 if (current == "CIRCLE")
                 {
-                    if (convertList[i + 8] == "INSIDE")
+                    if (dxfList[i + 8] == "INSIDE")
                     {
-                        outsideEntities.Add("IC x" + Math.Round(Convert.ToDecimal(convertList[i + 12]),4) + " Y" + Math.Round(Convert.ToDecimal(convertList[i + 14]),4) + " R" + convertList[i + 18]);
+                        coordinateList.Add("IC x" + Math.Round(Convert.ToDecimal(dxfList[i + 12]),4) + 
+                            " Y" + Math.Round(Convert.ToDecimal(dxfList[i + 14]),4) + 
+                            " R" + dxfList[i + 18]);
                     }
 
-                    if (convertList[i + 8] == "OUTSIDE")
+                    if (dxfList[i + 8] == "OUTSIDE")
                     {
-                        outsideEntities.Add("OC x" + convertList[i + 12] + " Y" + convertList[i + 14] + " R" + convertList[i + 18]);
+                        coordinateList.Add("OC x" + dxfList[i + 12] + 
+                            " Y" + dxfList[i + 14] + 
+                            " R" + dxfList[i + 18]);
 
                     }
                 }
 
             }
 
-            outsideEntities.Add("G93 X0.0Y0.0Z0.0");
-            outsideEntities.Add("G130");
-            outsideEntities.Add("/M707");
-            outsideEntities.Add("G50");
-            converted_code.Lines = outsideEntities.ToArray();
+            coordinateList.Add("G93 X0.0Y0.0Z0.0");
+            coordinateList.Add("G130");
+            coordinateList.Add("/M707");
+            coordinateList.Add("G50");
+            converted_code.Lines = coordinateList.ToArray();
         }
 
-        public string x = "0.0000";
-        public void CircleData()
+        public void CircleData(int iCircle)
         {
             /// CIRCLE
             /// 8 - layer
@@ -156,10 +118,10 @@ namespace ncCreate
             /// We will always pierce at center and move left to quad, then run the x, y, i, j command
         }
 
-        public void ArcData()
+        public void ArcData(int iArc)
         {
             /// Pass in these variables:
-            
+
             /// ARC
             /// 8 - layer
             /// 10 - center x
@@ -167,18 +129,52 @@ namespace ncCreate
             /// 40 - radius
             /// 50 - start angle
             /// 51 - end angle
-           
+
             /// Convert these variable to the start and end points:
-            
+
             // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
             // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
             // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
             // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
 
             /// save these points for use in code 
+            var centerX = 0.0;
+            var centerY = 0.0;
+            var radiusArc = 0.0;
+            var startAngleArc = 0.0;
+            var endAngleArc = 0.0;
+
+            centerX = double.Parse(dxfList[iArc + 12]);
+            centerX = Math.Round(centerX, 5);
+
+            centerY = double.Parse(dxfList[iArc + 14]);
+            centerY = Math.Round(centerY, 5);
+
+            radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]),4);
+
+            // Convert angle to radians
+            startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]),4))*(Math.PI / 180);
+            endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]),4))*(Math.PI / 180);
+
+            var startX = centerX + (radiusArc * (Math.Cos(startAngleArc)));
+            var startY = centerY + (radiusArc * (Math.Sin(startAngleArc)));
+            if (dxfList[iArc + 8] == "INSIDE")
+            { 
+                coordinateList.Add($"IA X{startX} Y{startY} R{radiusArc}");
+            }
+
+            if (dxfList[iArc + 8] == "OUTSIDE")
+            {
+                coordinateList.Add($"OA X{startX} Y{startY} R{radiusArc}");
+
+                // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
+                // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
+                // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
+                // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
+            }
         }
 
-        public void LineData()
+        public void LineData(int iLine)
         {
             /// Pass in these variables:
 
@@ -192,6 +188,25 @@ namespace ncCreate
             /// Convert these variable to the start and end points:
 
             /// save these points for use in code 
+
+            if (dxfList[iLine + 8] == "INSIDE")
+            {
+                coordinateList.Add("IS x" + Math.Round(Convert.ToDecimal(dxfList[iLine + 12]), 4) +
+                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 14]), 4));
+
+                coordinateList.Add("IF x" + Math.Round(Convert.ToDecimal(dxfList[iLine + 18]), 4) +
+                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 20]), 4));
+
+            }
+
+            if (dxfList[iLine + 8] == "OUTSIDE")
+            {
+                coordinateList.Add("OS X" + Math.Round(Convert.ToDecimal(dxfList[iLine + 12]), 4) +
+                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 14]), 4));
+
+                coordinateList.Add("OF X" + Math.Round(Convert.ToDecimal(dxfList[iLine + 18]), 4) +
+                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 20]), 4));
+            }
         }
     }
 }
