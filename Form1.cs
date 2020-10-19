@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.OleDb;
 
 namespace ncCreate
 {
@@ -16,6 +17,7 @@ namespace ncCreate
         // Declare the filename variable
         private string ncFileName = string.Empty;
 
+        OleDbConnection con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\V6-Engineering\Documents\C_Sharp\ncCreate\dxfDB.accdb");
         public Form1()
         {
             InitializeComponent();
