@@ -43,6 +43,7 @@ namespace ncCreate
 
         List<string> dxfList = new List<string>();
         List<string> coordinateList = new List<string>();
+        List<string> part1List = new List<string>();
 
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
@@ -64,8 +65,7 @@ namespace ncCreate
                 {
                     /// Call Line Data Method
                     /// Pass in i so we know how to offset to get info needed
-                    LineData(i);
-                    
+                    LineData(i); 
                 }
 
                 if (current == "ARC")
@@ -120,8 +120,6 @@ namespace ncCreate
 
         public void ArcData(int iArc)
         {
-            /// Pass in these variables:
-
             /// ARC
             /// 8 - layer
             /// 10 - center x
@@ -129,7 +127,6 @@ namespace ncCreate
             /// 40 - radius
             /// 50 - start angle
             /// 51 - end angle
-
             /// Convert these variable to the start and end points:
 
             // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
@@ -176,26 +173,22 @@ namespace ncCreate
 
         public void LineData(int iLine)
         {
-            /// Pass in these variables:
-
             /// Line
             /// 8 - layer
             /// 10 - x1
             /// 20 - y1
             /// 11 - x2
             /// 21 - y2
-
             /// Convert these variable to the start and end points:
-
             /// save these points for use in code 
 
             if (dxfList[iLine + 8] == "INSIDE")
             {
-                coordinateList.Add("IS x" + Math.Round(Convert.ToDecimal(dxfList[iLine + 12]), 4) +
-                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 14]), 4));
+                coordinateList.Add("IS x" + Math.Round(Convert.ToDouble(dxfList[iLine + 12]), 4) +
+                    " Y" + Math.Round(Convert.ToDouble(dxfList[iLine + 14]), 4));
 
-                coordinateList.Add("IF x" + Math.Round(Convert.ToDecimal(dxfList[iLine + 18]), 4) +
-                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 20]), 4));
+                coordinateList.Add("IF x" + Math.Round(Convert.ToDouble(dxfList[iLine + 18]), 4) +
+                    " Y" + Math.Round(Convert.ToDouble(dxfList[iLine + 20]), 4));  
 
             }
 
