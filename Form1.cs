@@ -18,6 +18,7 @@ namespace ncCreate
         private string ncFileName = string.Empty;
 
         OleDbConnection con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\V6-Engineering\Documents\C_Sharp\ncCreate\dxfDB.accdb");
+        
         public Form1()
         {
             InitializeComponent();
@@ -51,6 +52,10 @@ namespace ncCreate
         {
             // Convert the original file to a list
             dxfList = File.ReadAllLines(ncFileName).ToList();
+
+            OleDbCommand cmd = con.CreateCommand();
+            con.Open();
+            con.Close();
 
             // Get the number of lines in List
             int convertLength = dxfList.Count;
@@ -183,6 +188,21 @@ namespace ncCreate
             /// 21 - y2
             /// Convert these variable to the start and end points:
             /// save these points for use in code 
+            var lineType = "Line";
+            var lineLayer = dxfList[iLine + 8];
+            var x1 = Convert.ToDouble(dxfList[iLine + 12]);
+            var y1 = Convert.ToDouble(dxfList[iLine + 14]);
+            var x2 = Convert.ToDouble(dxfList[iLine + 18]);
+            var y2 = Convert.ToDouble(dxfList[iLine + 20]);
+            var radius = 0;
+            var angle1 = 0;
+            var angle2 = 0;
+
+            con.Open();
+
+            OleDbCommand cmd = new OleDbCommand("INSERT INTO featureList(Type, Layer, X1, Y1, X2, Y2, R, Angle1, Angle2) values(lineType, lineLayer, x1, y1, x2, y2, radius, angle1, angle2)", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
 
             if (dxfList[iLine + 8] == "INSIDE")
             {
