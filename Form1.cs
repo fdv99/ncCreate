@@ -16,8 +16,6 @@ namespace ncCreate
     {
         // Declare the filename variable
         private string ncFileName = string.Empty;
-
-        OleDbConnection con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\V6-Engineering\Documents\C_Sharp\ncCreate\dxfDB.accdb");
         
         public Form1()
         {
@@ -85,6 +83,8 @@ namespace ncCreate
 
             file.Close();
         }
+
+
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
             // Convert the original file to a list
@@ -94,15 +94,13 @@ namespace ncCreate
             // Get the number of lines in List
             int convertLength = dxfList.Count;
 
+            // Remove from the end section of entities to the end of the list
             dxfList.RemoveRange(endsecLine, (convertLength - endsecLine));
 
+            // Remove from the start of the list to the entities section
             dxfList.RemoveRange(0, entitiesLine);
 
-            convertLength = dxfList.Count;
-
-            OleDbCommand cmd = con.CreateCommand();
-            con.Open();
-            con.Close();          
+            convertLength = dxfList.Count;   
 
             // Go through list and copy all Outside lines/arcs to outside list
             //List<string> coordinateList = new List<string>();          
@@ -230,7 +228,6 @@ namespace ncCreate
             /// 20 - y1
             /// 11 - x2
             /// 21 - y2
-            /// Convert these variable to the start and end points:
             /// save these points for use in code 
             var lineType = "Line";
             var lineLayer = dxfList[iLine + 8];
@@ -238,9 +235,6 @@ namespace ncCreate
             var y1 = Convert.ToDouble(dxfList[iLine + 14]);
             var x2 = Convert.ToDouble(dxfList[iLine + 18]);
             var y2 = Convert.ToDouble(dxfList[iLine + 20]);
-            var radius = 0;
-            var angle1 = 0;
-            var angle2 = 0;
 
             //con.Open();
             //OleDbCommand cmd = new OleDbCommand("INSERT INTO featureList(Type, Layer, X1, Y1, X2, Y2, R, Angle1, Angle2) values(lineType, lineLayer, x1, y1, x2, y2, radius, angle1, angle2)", con);
@@ -249,21 +243,17 @@ namespace ncCreate
 
             if (dxfList[iLine + 8] == "INSIDE")
             {
-                coordinateList.Add("IS x" + Math.Round(Convert.ToDouble(dxfList[iLine + 12]), 4) +
-                    " Y" + Math.Round(Convert.ToDouble(dxfList[iLine + 14]), 4));
+                coordinateList.Add("IS x" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
 
-                coordinateList.Add("IF x" + Math.Round(Convert.ToDouble(dxfList[iLine + 18]), 4) +
-                    " Y" + Math.Round(Convert.ToDouble(dxfList[iLine + 20]), 4));  
+                coordinateList.Add("IF x" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));  
 
             }
 
             if (dxfList[iLine + 8] == "OUTSIDE")
             {
-                coordinateList.Add("OS X" + Math.Round(Convert.ToDecimal(dxfList[iLine + 12]), 4) +
-                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 14]), 4));
+                coordinateList.Add("OS X" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
 
-                coordinateList.Add("OF X" + Math.Round(Convert.ToDecimal(dxfList[iLine + 18]), 4) +
-                    " Y" + Math.Round(Convert.ToDecimal(dxfList[iLine + 20]), 4));
+                coordinateList.Add("OF X" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));
             }
         }
     }
