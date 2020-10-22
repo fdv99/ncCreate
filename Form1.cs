@@ -31,34 +31,78 @@ namespace ncCreate
             // Choose the nc file you want to edit
             var openFileDialog1 = new OpenFileDialog();
 
-            // Filter the results so you only see .nc files and text files
+            // Filter the results so you only see .dxf files
             openFileDialog1.Filter = "dxf files (*.dxf)|*.dxf|All files (*.*)|*.*";
 
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 if ((myStream = openFileDialog1.OpenFile()) != null)
                 {
+                    // Store the file path of the dxf file
                     ncFileName = openFileDialog1.FileName;
+
+                    // Display the dxf file code in the window
                     original_code.Text = File.ReadAllText(ncFileName);
                 }
+                FindEntities();
             }
+
         }
 
         List<string> dxfList = new List<string>();
         List<string> coordinateList = new List<string>();
         List<string> part1List = new List<string>();
+        int entitiesLine = 0;
+        int endsecLine = 0;
 
+        private void FindEntities()
+        {
+            int counter = 0;
+            string line;
+            //int entitiesLine = 0;
+            //int endsecLine = 0;
+
+            StreamReader file = new StreamReader(ncFileName);
+            while ((line = file.ReadLine()) != null)
+            {
+                // Check if we are at the entities line...
+                if (line.Contains("ENTITIES"))
+                {
+                    // then save the line number
+                    entitiesLine = counter;
+                }
+                // Check if we are at the endsec of the entitie section...
+                else if (line.Contains("ENDSEC") && entitiesLine != 0)
+                {
+                    // Save the line number of the end of the section
+                    endsecLine = counter;
+                    // Break out of the while loop
+                    break;
+                }
+                counter++;
+
+            }
+
+            file.Close();
+        }
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
             // Convert the original file to a list
+            // Break it up so that we only copy the entities section using entitiesLine as the start and endsecLine as the end
             dxfList = File.ReadAllLines(ncFileName).ToList();
-
-            OleDbCommand cmd = con.CreateCommand();
-            con.Open();
-            con.Close();
 
             // Get the number of lines in List
             int convertLength = dxfList.Count;
+
+            dxfList.RemoveRange(endsecLine, (convertLength - endsecLine));
+
+            dxfList.RemoveRange(0, entitiesLine);
+
+            convertLength = dxfList.Count;
+
+            OleDbCommand cmd = con.CreateCommand();
+            con.Open();
+            con.Close();          
 
             // Go through list and copy all Outside lines/arcs to outside list
             //List<string> coordinateList = new List<string>();          
@@ -198,11 +242,10 @@ namespace ncCreate
             var angle1 = 0;
             var angle2 = 0;
 
-            con.Open();
-
-            OleDbCommand cmd = new OleDbCommand("INSERT INTO featureList(Type, Layer, X1, Y1, X2, Y2, R, Angle1, Angle2) values(lineType, lineLayer, x1, y1, x2, y2, radius, angle1, angle2)", con);
-            cmd.ExecuteNonQuery();
-            con.Close();
+            //con.Open();
+            //OleDbCommand cmd = new OleDbCommand("INSERT INTO featureList(Type, Layer, X1, Y1, X2, Y2, R, Angle1, Angle2) values(lineType, lineLayer, x1, y1, x2, y2, radius, angle1, angle2)", con);
+            //cmd.ExecuteNonQuery();
+            //con.Close();
 
             if (dxfList[iLine + 8] == "INSIDE")
             {
