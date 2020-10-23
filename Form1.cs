@@ -124,20 +124,7 @@ namespace ncCreate
 
                 if (current == "CIRCLE")
                 {
-                    if (dxfList[i + 8] == "INSIDE")
-                    {
-                        coordinateList.Add("IC x" + Math.Round(Convert.ToDecimal(dxfList[i + 12]),4) + 
-                            " Y" + Math.Round(Convert.ToDecimal(dxfList[i + 14]),4) + 
-                            " R" + dxfList[i + 18]);
-                    }
-
-                    if (dxfList[i + 8] == "OUTSIDE")
-                    {
-                        coordinateList.Add("OC x" + dxfList[i + 12] + 
-                            " Y" + dxfList[i + 14] + 
-                            " R" + dxfList[i + 18]);
-
-                    }
+                    CircleData(i);
                 }
 
             }
@@ -158,13 +145,28 @@ namespace ncCreate
             /// 40 - radius
             /// 50 - Start Angle
             /// 51 - End Angle
-            
             /// X = Center(10) - radius(40)
             /// Y = Center(20)
             /// I = radius(40)
             /// J = Y direction distance from starting point to arc center
-           
+
             /// We will always pierce at center and move left to quad, then run the x, y, i, j command
+            double xc = Convert.ToDouble(dxfList[iCircle + 12]);
+            double yc = Convert.ToDouble(dxfList[iCircle + 14]);
+            double rc = Convert.ToDouble(dxfList[iCircle + 18]);
+            if (dxfList[iCircle + 8] == "INSIDE")
+            {
+                coordinateList.Add("IC x" + Math.Round(xc, 4) +
+                    " Y" + Math.Round(yc, 4) +
+                    " R" + Math.Round(rc, 4));
+            }
+
+            if (dxfList[iCircle + 8] == "OUTSIDE")
+            {
+                coordinateList.Add("OC x" + Math.Round(xc, 4) +
+                    " Y" + Math.Round(yc, 4) +
+                    " R" + Math.Round(rc, 4));
+            }
         }
 
         public void ArcData(int iArc)
