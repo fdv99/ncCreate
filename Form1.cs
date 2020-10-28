@@ -129,6 +129,7 @@ namespace ncCreate
 
             }
 
+            // Add the End Sequence to the code
             coordinateList.Add("G93 X0.0Y0.0Z0.0");
             coordinateList.Add("G130");
             coordinateList.Add("/M707");
@@ -156,14 +157,16 @@ namespace ncCreate
             double rc = Convert.ToDouble(dxfList[iCircle + 18]);
             if (dxfList[iCircle + 8] == "INSIDE")
             {
-                coordinateList.Add("IC x" + Math.Round(xc, 4) +
+                // Inside circle Pierce, always pierce in center, G01 to edge, then process circle
+                coordinateList.Add("ICP x" + Math.Round(xc, 4) +
                     " Y" + Math.Round(yc, 4) +
                     " R" + Math.Round(rc, 4));
             }
 
             if (dxfList[iCircle + 8] == "OUTSIDE")
             {
-                coordinateList.Add("OC x" + Math.Round(xc, 4) +
+                // Outside circle pierce, always pierce outside 0.125 horizontal
+                coordinateList.Add("OCP x" + Math.Round(xc, 4) +
                     " Y" + Math.Round(yc, 4) +
                     " R" + Math.Round(rc, 4));
             }
@@ -186,6 +189,7 @@ namespace ncCreate
             // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
 
             /// save these points for use in code 
+            var arcLayer = dxfList[iArc + 8];
             var centerX = 0.0;
             var centerY = 0.0;
             var radiusArc = 0.0;
@@ -206,19 +210,19 @@ namespace ncCreate
 
             var startX = centerX + (radiusArc * (Math.Cos(startAngleArc)));
             var startY = centerY + (radiusArc * (Math.Sin(startAngleArc)));
-            if (dxfList[iArc + 8] == "INSIDE")
+            var endX = centerX + (radiusArc * (Math.Cos(endAngleArc)));
+            var endY = centerY + (radiusArc * (Math.Sin(endAngleArc)));
+
+            if (arcLayer == "INSIDE")
             { 
-                coordinateList.Add($"IA X{startX} Y{startY} R{radiusArc}");
+                coordinateList.Add($"IAS X{startX} Y{startY} R{radiusArc}");
+                coordinateList.Add($"IAF X{endX} Y{endY} R{radiusArc}");
             }
 
-            if (dxfList[iArc + 8] == "OUTSIDE")
+            if (arcLayer == "OUTSIDE")
             {
-                coordinateList.Add($"OA X{startX} Y{startY} R{radiusArc}");
-
-                // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
-                // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
-                // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
-                // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
+                coordinateList.Add($"OAS X{startX} Y{startY} R{radiusArc}");
+                coordinateList.Add($"OAF X{endX} Y{endY} R{radiusArc}");
             }
         }
 
@@ -230,8 +234,6 @@ namespace ncCreate
             /// 20 - y1
             /// 11 - x2
             /// 21 - y2
-            /// save these points for use in code 
-            var lineType = "Line";
             var lineLayer = dxfList[iLine + 8];
             var x1 = Convert.ToDouble(dxfList[iLine + 12]);
             var y1 = Convert.ToDouble(dxfList[iLine + 14]);
@@ -243,7 +245,7 @@ namespace ncCreate
             //cmd.ExecuteNonQuery();
             //con.Close();
 
-            if (dxfList[iLine + 8] == "INSIDE")
+            if (lineLayer == "INSIDE")
             {
                 coordinateList.Add("IS x" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
 
@@ -251,7 +253,7 @@ namespace ncCreate
 
             }
 
-            if (dxfList[iLine + 8] == "OUTSIDE")
+            if (lineLayer == "OUTSIDE")
             {
                 coordinateList.Add("OS X" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
 
