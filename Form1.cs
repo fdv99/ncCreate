@@ -24,17 +24,16 @@ namespace ncCreate
 
         private void Btn_OpenFile_Click(object sender, EventArgs e)
         {
-            Stream myStream;
-
             // Choose the nc file you want to edit
-            var openFileDialog1 = new OpenFileDialog();
-
-            // Filter the results so you only see .dxf files
-            openFileDialog1.Filter = "dxf files (*.dxf)|*.dxf|All files (*.*)|*.*";
+            var openFileDialog1 = new OpenFileDialog
+            {
+                // Filter the results so you only see .dxf files
+                Filter = "dxf files (*.dxf)|*.dxf|All files (*.*)|*.*"
+            };
 
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if ((myStream = openFileDialog1.OpenFile()) != null)
+                if ((openFileDialog1.OpenFile()) != null)
                 {
                     // Store the file path of the dxf file
                     ncFileName = openFileDialog1.FileName;
@@ -49,7 +48,6 @@ namespace ncCreate
 
         List<string> dxfList = new List<string>();
         List<string> coordinateList = new List<string>();
-        List<string> part1List = new List<string>();
         int entitiesLine = 0;
         int endsecLine = 0;
 
@@ -190,23 +188,18 @@ namespace ncCreate
 
             /// save these points for use in code 
             var arcLayer = dxfList[iArc + 8];
-            var centerX = 0.0;
-            var centerY = 0.0;
-            var radiusArc = 0.0;
-            var startAngleArc = 0.0;
-            var endAngleArc = 0.0;
 
-            centerX = double.Parse(dxfList[iArc + 12]);
+            var centerX = double.Parse(dxfList[iArc + 12]);
             centerX = Math.Round(centerX, 5);
 
-            centerY = double.Parse(dxfList[iArc + 14]);
+            var centerY = double.Parse(dxfList[iArc + 14]);
             centerY = Math.Round(centerY, 5);
 
-            radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]),4);
+            var radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]),4);
 
             // Convert angle to radians
-            startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]),4))*(Math.PI / 180);
-            endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]),4))*(Math.PI / 180);
+            var startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]),4))*(Math.PI / 180);
+            var endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]),4))*(Math.PI / 180);
 
             var startX = centerX + (radiusArc * (Math.Cos(startAngleArc)));
             var startY = centerY + (radiusArc * (Math.Sin(startAngleArc)));
@@ -240,17 +233,11 @@ namespace ncCreate
             var x2 = Convert.ToDouble(dxfList[iLine + 18]);
             var y2 = Convert.ToDouble(dxfList[iLine + 20]);
 
-            //con.Open();
-            //OleDbCommand cmd = new OleDbCommand("INSERT INTO featureList(Type, Layer, X1, Y1, X2, Y2, R, Angle1, Angle2) values(lineType, lineLayer, x1, y1, x2, y2, radius, angle1, angle2)", con);
-            //cmd.ExecuteNonQuery();
-            //con.Close();
-
             if (lineLayer == "INSIDE")
             {
                 coordinateList.Add("IS x" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
 
-                coordinateList.Add("IF x" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));  
-
+                coordinateList.Add("IF x" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));
             }
 
             if (lineLayer == "OUTSIDE")

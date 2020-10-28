@@ -80,7 +80,7 @@
             this.Controls.Add(this.Btn_NcCreate);
             this.Controls.Add(this.Btn_OpenFile);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "V6 Laser CNC";
             this.ResumeLayout(false);
 
         }
