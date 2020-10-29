@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.OleDb;
 
 namespace ncCreate
 {
@@ -16,7 +10,7 @@ namespace ncCreate
     {
         // Declare the filename variable
         private string dxfFileName = string.Empty;
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -89,7 +83,7 @@ namespace ncCreate
             // Break it up so that we only copy the entities section using entitiesLine as the start and endsecLine as the end
             // Make sure the list is empty to start
             dxfList.Clear();
-            
+
             // add dxf file to list
             dxfList = File.ReadAllLines(dxfFileName).ToList();
 
@@ -102,12 +96,12 @@ namespace ncCreate
             // Remove from the start of the list to the entities section
             dxfList.RemoveRange(0, entitiesLine);
 
-            convertLength = dxfList.Count;   
+            convertLength = dxfList.Count;
 
             // Go through list and copy all Outside lines/arcs to outside list
             //List<string> coordinateList = new List<string>();          
-            
-            for (int i=1; i< convertLength; i+=1)
+
+            for (int i = 1; i < convertLength; i += 1)
             {
                 // Get current line on list
                 string current = dxfList[i];
@@ -116,7 +110,7 @@ namespace ncCreate
                 {
                     /// Call Line Data Method
                     /// Pass in i so we know how to offset to get info needed
-                    LineData(i); 
+                    LineData(i);
                 }
 
                 if (current == "ARC")
@@ -136,6 +130,7 @@ namespace ncCreate
             coordinateList.Add("G130");
             coordinateList.Add("/M707");
             coordinateList.Add("G50");
+            // Need to add M102(), G90, G92, G93, M100 to start
             converted_code.Lines = coordinateList.ToArray();
         }
 
@@ -147,8 +142,6 @@ namespace ncCreate
             /// 10 - center x
             /// 20 - center y
             /// 40 - radius
-            /// 50 - Start Angle
-            /// 51 - End Angle
             /// X = Center(10) - radius(40)
             /// Y = Center(20)
             /// I = radius(40)
@@ -200,11 +193,11 @@ namespace ncCreate
             var centerY = double.Parse(dxfList[iArc + 14]);
             centerY = Math.Round(centerY, 5);
 
-            var radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]),4);
+            var radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]), 4);
 
             // Convert angle to radians
-            var startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]),4))*(Math.PI / 180);
-            var endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]),4))*(Math.PI / 180);
+            var startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]), 4)) * (Math.PI / 180);
+            var endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]), 4)) * (Math.PI / 180);
 
             var startX = centerX + (radiusArc * (Math.Cos(startAngleArc)));
             var startY = centerY + (radiusArc * (Math.Sin(startAngleArc)));
@@ -212,7 +205,7 @@ namespace ncCreate
             var endY = centerY + (radiusArc * (Math.Sin(endAngleArc)));
 
             if (arcLayer == "INSIDE")
-            { 
+            {
                 coordinateList.Add($"IAS X{startX} Y{startY} R{radiusArc}");
                 coordinateList.Add($"IAF X{endX} Y{endY} R{radiusArc}");
             }
