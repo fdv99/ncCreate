@@ -15,7 +15,7 @@ namespace ncCreate
     public partial class Form1 : Form
     {
         // Declare the filename variable
-        private string ncFileName = string.Empty;
+        private string dxfFileName = string.Empty;
         
         public Form1()
         {
@@ -36,10 +36,10 @@ namespace ncCreate
                 if ((openFileDialog1.OpenFile()) != null)
                 {
                     // Store the file path of the dxf file
-                    ncFileName = openFileDialog1.FileName;
+                    dxfFileName = openFileDialog1.FileName;
 
                     // Display the dxf file code in the window
-                    original_code.Text = File.ReadAllText(ncFileName);
+                    original_code.Text = File.ReadAllText(dxfFileName);
                 }
                 FindEntities();
             }
@@ -58,7 +58,7 @@ namespace ncCreate
             //int entitiesLine = 0;
             //int endsecLine = 0;
 
-            StreamReader file = new StreamReader(ncFileName);
+            StreamReader file = new StreamReader(dxfFileName);
             while ((line = file.ReadLine()) != null)
             {
                 // Check if we are at the entities line...
@@ -87,7 +87,11 @@ namespace ncCreate
         {
             // Convert the original file to a list
             // Break it up so that we only copy the entities section using entitiesLine as the start and endsecLine as the end
-            dxfList = File.ReadAllLines(ncFileName).ToList();
+            // Make sure the list is empty to start
+            dxfList.Clear();
+            
+            // add dxf file to list
+            dxfList = File.ReadAllLines(dxfFileName).ToList();
 
             // Get the number of lines in List
             int convertLength = dxfList.Count;
@@ -135,6 +139,7 @@ namespace ncCreate
             converted_code.Lines = coordinateList.ToArray();
         }
 
+        #region EntityMethods
         public void CircleData(int iCircle)
         {
             /// CIRCLE
@@ -247,5 +252,7 @@ namespace ncCreate
                 coordinateList.Add("OF X" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));
             }
         }
+
+        #endregion
     }
 }
