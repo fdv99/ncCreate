@@ -16,6 +16,11 @@ namespace ncCreate
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Find the dxf file to open.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_OpenFile_Click(object sender, EventArgs e)
         {
             // Choose the nc file you want to edit
@@ -45,6 +50,9 @@ namespace ncCreate
         int entitiesLine = 0;
         int endsecLine = 0;
 
+        /// <summary>
+        /// Get Part entities out of dxf file, lines, arcs, circles
+        /// </summary>
         private void FindEntities()
         {
             int counter = 0;
@@ -76,7 +84,11 @@ namespace ncCreate
             file.Close();
         }
 
-
+        /// <summary>
+        /// Create NC file from entities
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
             // Convert the original file to a list
