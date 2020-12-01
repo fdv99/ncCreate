@@ -25,7 +25,7 @@ namespace ncCreate
                 Filter = "dxf files (*.dxf)|*.dxf|All files (*.*)|*.*"
             };
 
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if ((openFileDialog1.OpenFile()) != null)
                 {
@@ -35,6 +35,7 @@ namespace ncCreate
                     // Display the dxf file code in the window
                     original_code.Text = File.ReadAllText(dxfFileName);
                 }
+
                 FindEntities();
             }
 
@@ -49,8 +50,6 @@ namespace ncCreate
         {
             int counter = 0;
             string line;
-            //int entitiesLine = 0;
-            //int endsecLine = 0;
 
             StreamReader file = new StreamReader(dxfFileName);
             while ((line = file.ReadLine()) != null)
@@ -70,12 +69,10 @@ namespace ncCreate
                     break;
                 }
                 counter++;
-
             }
 
             file.Close();
         }
-
 
         private void Btn_NcCreate_Click(object sender, EventArgs e)
         {
@@ -135,6 +132,11 @@ namespace ncCreate
         }
 
         #region EntityMethods
+
+        /// <summary>
+        /// Get circle data from dxf file
+        /// </summary>
+        /// <param name="iCircle"></param>
         public void CircleData(int iCircle)
         {
             /// CIRCLE
@@ -168,6 +170,10 @@ namespace ncCreate
             }
         }
 
+        /// <summary>
+        /// Get arc data for all arcs in dxf program
+        /// </summary>
+        /// <param name="iArc"></param>
         public void ArcData(int iArc)
         {
             /// ARC
@@ -177,14 +183,11 @@ namespace ncCreate
             /// 40 - radius
             /// 50 - start angle
             /// 51 - end angle
-            /// Convert these variable to the start and end points:
-
             // X Start point = x center point (10) + (radius(40) * cos(startAngle(50))
             // Y Start point = y center point (20) + (radius(40) * sin(starttAngle(50))
             // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
             // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
 
-            /// save these points for use in code 
             var arcLayer = dxfList[iArc + 8];
 
             var centerX = double.Parse(dxfList[iArc + 12]);
@@ -217,6 +220,10 @@ namespace ncCreate
             }
         }
 
+        /// <summary>
+        /// Get start and end points for each line in dxf file
+        /// </summary>
+        /// <param name="iLine"></param>
         public void LineData(int iLine)
         {
             /// Line
