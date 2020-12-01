@@ -104,9 +104,6 @@ namespace ncCreate
 
             convertLength = dxfList.Count;
 
-            // Go through list and copy all Outside lines/arcs to outside list
-            //List<string> coordinateList = new List<string>();          
-
             for (int i = 1; i < convertLength; i += 1)
             {
                 // Get current line on list
