@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ncCreate", "ncCreate.csproj", "{18678C27-E750-4761-82AB-350E86881888}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitiesModel", "..\EntitiesModel\EntitiesModel.csproj", "{E8B530E8-E019-496B-9382-60875897911E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXFParse", "..\DXFParse\DXFParse.csproj", "{E969B5F8-C33F-4072-B7E2-7AC1470783FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{18678C27-E750-4761-82AB-350E86881888}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18678C27-E750-4761-82AB-350E86881888}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18678C27-E750-4761-82AB-350E86881888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8B530E8-E019-496B-9382-60875897911E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B530E8-E019-496B-9382-60875897911E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B530E8-E019-496B-9382-60875897911E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B530E8-E019-496B-9382-60875897911E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E969B5F8-C33F-4072-B7E2-7AC1470783FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E969B5F8-C33F-4072-B7E2-7AC1470783FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E969B5F8-C33F-4072-B7E2-7AC1470783FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E969B5F8-C33F-4072-B7E2-7AC1470783FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

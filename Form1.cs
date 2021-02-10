@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntitiesModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,6 +49,8 @@ namespace ncCreate
 
         List<string> dxfList = new List<string>();
         List<string> coordinateList = new List<string>();
+        List<Entities> entitiesList = new List<Entities>();
+
         int entitiesLine = 0;
         int endsecLine = 0;
 
@@ -104,6 +107,7 @@ namespace ncCreate
 
             convertLength = dxfList.Count;
 
+
             for (int i = 1; i < convertLength; i += 1)
             {
                 // Get current line on list
@@ -156,30 +160,32 @@ namespace ncCreate
             /// J = Y direction distance from starting point to arc center
 
             /// We will always pierce at center and move left to quad, then run the x, y, i, j command
-            double xc = Convert.ToDouble(dxfList[iCircle + 12]);
-            double yc = Convert.ToDouble(dxfList[iCircle + 14]);
-            double rc = Convert.ToDouble(dxfList[iCircle + 18]);
-            if (dxfList[iCircle + 8] == "INSIDE")
+            Circle circle = new Circle();
+
+            circle.Layer = dxfList[iCircle + 8];
+            circle.CenterX = double.Parse(dxfList[iCircle + 12]);
+            circle.CenterY = double.Parse(dxfList[iCircle + 14]);
+            circle.Radius = double.Parse(dxfList[iCircle + 18]);
+
+            entitiesList.Add(circle);
+
+            if (circle.Layer == "INSIDE")
             {
                 // Inside circle Pierce, always pierce in center, G01 to edge, then process circle
-                coordinateList.Add("ICP x" + Math.Round(xc, 4) +
-                    " Y" + Math.Round(yc, 4) +
-                    " R" + Math.Round(rc, 4));
+                coordinateList.Add("Inside Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
             }
 
-            if (dxfList[iCircle + 8] == "OUTSIDE")
+            if (circle.Layer == "OUTSIDE")
             {
                 // Outside circle pierce, always pierce outside 0.125 horizontal
-                coordinateList.Add("OCP x" + Math.Round(xc, 4) +
-                    " Y" + Math.Round(yc, 4) +
-                    " R" + Math.Round(rc, 4));
+                coordinateList.Add("Outside Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
             }
         }
 
-        /// <summary>
-        /// Get arc data for all arcs in dxf program
-        /// </summary>
-        /// <param name="iArc"></param>
         public void ArcData(int iArc)
         {
             /// ARC
@@ -194,42 +200,34 @@ namespace ncCreate
             // X End point = x center point (10) + (radius(40) * cos(endAngle(51))
             // Y End point = y center point (20) + (radius(40) * sin(endAngle(51))
 
-            var arcLayer = dxfList[iArc + 8];
+            Arc arc = new Arc();
+            arc.Layer = dxfList[iArc + 8];
+            arc.CenterX = double.Parse(dxfList[iArc + 12]);
+            arc.CenterY = double.Parse(dxfList[iArc + 14]);
+            arc.Radius = double.Parse(dxfList[iArc + 18]);
+            arc.StartAngle = (double.Parse(dxfList[iArc + 22])) * (Math.PI / 180);
+            arc.EndAngle = (double.Parse(dxfList[iArc + 24])) * (Math.PI / 180);
+            arc.StartX = arc.CenterX + (arc.Radius * (Math.Cos(arc.StartAngle)));
+            arc.StartY = arc.CenterY + (arc.Radius * (Math.Sin(arc.StartAngle)));
+            arc.EndX = arc.CenterX + (arc.Radius * (Math.Cos(arc.EndAngle)));
+            arc.EndY = arc.CenterY + (arc.Radius * (Math.Sin(arc.EndAngle)));
 
-            var centerX = double.Parse(dxfList[iArc + 12]);
-            centerX = Math.Round(centerX, 5);
+            entitiesList.Add(arc);
 
-            var centerY = double.Parse(dxfList[iArc + 14]);
-            centerY = Math.Round(centerY, 5);
-
-            var radiusArc = Math.Round(double.Parse(dxfList[iArc + 18]), 4);
-
-            // Convert angle to radians
-            var startAngleArc = (Math.Round(double.Parse(dxfList[iArc + 22]), 4)) * (Math.PI / 180);
-            var endAngleArc = (Math.Round(double.Parse(dxfList[iArc + 24]), 4)) * (Math.PI / 180);
-
-            var startX = centerX + (radiusArc * (Math.Cos(startAngleArc)));
-            var startY = centerY + (radiusArc * (Math.Sin(startAngleArc)));
-            var endX = centerX + (radiusArc * (Math.Cos(endAngleArc)));
-            var endY = centerY + (radiusArc * (Math.Sin(endAngleArc)));
-
-            if (arcLayer == "INSIDE")
+            if (arc.Layer == "INSIDE")
             {
-                coordinateList.Add($"IAS X{startX} Y{startY} R{radiusArc}");
-                coordinateList.Add($"IAF X{endX} Y{endY} R{radiusArc}");
+                coordinateList.Add($"Inside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                coordinateList.Add($"Inside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
 
-            if (arcLayer == "OUTSIDE")
+            if (arc.Layer == "OUTSIDE")
             {
-                coordinateList.Add($"OAS X{startX} Y{startY} R{radiusArc}");
-                coordinateList.Add($"OAF X{endX} Y{endY} R{radiusArc}");
+                coordinateList.Add($"Outside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                coordinateList.Add($"Outside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
         }
 
-        /// <summary>
-        /// Get start and end points for each line in dxf file
-        /// </summary>
-        /// <param name="iLine"></param>
+
         public void LineData(int iLine)
         {
             /// Line
@@ -238,24 +236,27 @@ namespace ncCreate
             /// 20 - y1
             /// 11 - x2
             /// 21 - y2
-            var lineLayer = dxfList[iLine + 8];
-            var x1 = Convert.ToDouble(dxfList[iLine + 12]);
-            var y1 = Convert.ToDouble(dxfList[iLine + 14]);
-            var x2 = Convert.ToDouble(dxfList[iLine + 18]);
-            var y2 = Convert.ToDouble(dxfList[iLine + 20]);
+            /// 
 
-            if (lineLayer == "INSIDE")
+            Line line = new Line();
+            line.Layer = dxfList[iLine + 8];
+            line.StartX = Convert.ToDouble(dxfList[iLine + 12]);
+            line.StartY = Convert.ToDouble(dxfList[iLine + 14]);
+            line.EndX = Convert.ToDouble(dxfList[iLine + 18]);
+            line.EndY = Convert.ToDouble(dxfList[iLine + 20]);
+            entitiesList.Add(line);
+
+            if (line.Layer == "INSIDE")
             {
-                coordinateList.Add("IS x" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
-
-                coordinateList.Add("IF x" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));
+                coordinateList.Add("Inside Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                coordinateList.Add("Inside Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
             }
 
-            if (lineLayer == "OUTSIDE")
+            if (line.Layer == "OUTSIDE")
             {
-                coordinateList.Add("OS X" + Math.Round(x1, 4) + " Y" + Math.Round(y1, 4));
+                coordinateList.Add("Outside Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
 
-                coordinateList.Add("OF X" + Math.Round(x2, 4) + " Y" + Math.Round(y2, 4));
+                coordinateList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
         }
 
