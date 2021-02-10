@@ -9,7 +9,6 @@ namespace ncCreate
 {
     public partial class Form1 : Form
     {
-        // Declare the filename variable
         private string dxfFileName = string.Empty;
         List<string> dxfList = new List<string>();
         List<string> coordinateList = new List<string>();
@@ -103,7 +102,6 @@ namespace ncCreate
 
                 if (current == "LINE")
                 {
-                    /// Call Line Data Method
                     /// Pass in i so we know how to offset to get info needed
                     LineData(i);
                 }
@@ -217,7 +215,6 @@ namespace ncCreate
             /// 20 - y1
             /// 11 - x2
             /// 21 - y2
-            /// 
 
             Line line = new Line();
             line.Layer = dxfList[iLine + 8];
