@@ -11,17 +11,17 @@ namespace ncCreate
     {
         // Declare the filename variable
         private string dxfFileName = string.Empty;
+        List<string> dxfList = new List<string>();
+        List<string> coordinateList = new List<string>();
+        List<Entities> entitiesList = new List<Entities>();
+        int entitiesLine = 0;
+        int endsecLine = 0;
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Find the dxf file to open.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Btn_OpenFile_Click(object sender, EventArgs e)
         {
             // Choose the nc file you want to edit
@@ -44,19 +44,8 @@ namespace ncCreate
 
                 FindEntities();
             }
-
         }
 
-        List<string> dxfList = new List<string>();
-        List<string> coordinateList = new List<string>();
-        List<Entities> entitiesList = new List<Entities>();
-
-        int entitiesLine = 0;
-        int endsecLine = 0;
-
-        /// <summary>
-        /// Get Part entities out of dxf file, lines, arcs, circles
-        /// </summary>
         private void FindEntities()
         {
             int counter = 0;
@@ -107,7 +96,6 @@ namespace ncCreate
 
             convertLength = dxfList.Count;
 
-
             for (int i = 1; i < convertLength; i += 1)
             {
                 // Get current line on list
@@ -129,24 +117,17 @@ namespace ncCreate
                 {
                     CircleData(i);
                 }
-
             }
 
             // Add the End Sequence to the code
-            coordinateList.Add("G93 X0.0Y0.0Z0.0");
             coordinateList.Add("G130");
             coordinateList.Add("/M707");
             coordinateList.Add("G50");
-            // Need to add M102(), G90, G92, G93, M100 to start
             converted_code.Lines = coordinateList.ToArray();
         }
 
         #region EntityMethods
 
-        /// <summary>
-        /// Get circle data from dxf file
-        /// </summary>
-        /// <param name="iCircle"></param>
         public void CircleData(int iCircle)
         {
             /// CIRCLE
@@ -160,12 +141,13 @@ namespace ncCreate
             /// J = Y direction distance from starting point to arc center
 
             /// We will always pierce at center and move left to quad, then run the x, y, i, j command
-            Circle circle = new Circle();
-
-            circle.Layer = dxfList[iCircle + 8];
-            circle.CenterX = double.Parse(dxfList[iCircle + 12]);
-            circle.CenterY = double.Parse(dxfList[iCircle + 14]);
-            circle.Radius = double.Parse(dxfList[iCircle + 18]);
+            Circle circle = new Circle
+            {
+                Layer = dxfList[iCircle + 8],
+                CenterX = double.Parse(dxfList[iCircle + 12]),
+                CenterY = double.Parse(dxfList[iCircle + 14]),
+                Radius = double.Parse(dxfList[iCircle + 18])
+            };
 
             entitiesList.Add(circle);
 
@@ -227,7 +209,6 @@ namespace ncCreate
             }
         }
 
-
         public void LineData(int iLine)
         {
             /// Line
@@ -259,7 +240,8 @@ namespace ncCreate
                 coordinateList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
         }
-
         #endregion
     }
+
+
 }
