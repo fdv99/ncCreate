@@ -117,6 +117,8 @@ namespace ncCreate
                 }
             }
 
+            SortData(entitiesList);
+
             // Add the End Sequence to the code
             coordinateList.Add("G130");
             coordinateList.Add("/M707");
@@ -236,6 +238,74 @@ namespace ncCreate
 
                 coordinateList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
+        }
+
+        public void SortData(List<Entities> itemsList)
+        {
+            List<Entities> tempItemList = new List<Entities>();
+            tempItemList = itemsList;
+
+            LaserFeature feature = new LaserFeature();
+            List<Entities> etchingList = new List<Entities>();
+            List<Entities> insideCutList = new List<Entities>();
+            List<Entities> outsideCutList = new List<Entities>();
+
+            foreach (var item in itemsList)
+            {
+                if (item.Layer.ToLower() == "mark" || item.Layer.ToLower() == "dado")
+                {
+                    etchingList.Add(item);
+                }
+                else if (item.Layer.ToLower() == "inside")
+                {
+                    insideCutList.Add(item);
+                }
+                else if (item.Layer.ToLower() == "outside")
+                {
+                    outsideCutList.Add(item);
+                }
+            }
+
+            //double prevStartX = double.NaN;
+            //double prevStartY = double.NaN;
+            //double prevEndX = double.NaN;
+            //double prevEndY = double.NaN;
+            //double currentStartX = double.NaN;
+            //double currentStartY = double.NaN;
+            //double currentEndX = double.NaN;
+            //double currentEndY = double.NaN;
+
+            //foreach (var item in outsideCutList)
+            //{
+            //    currentStartX = item.StartX;
+            //    currentStartY = item.StartY;
+            //    currentEndX = item.EndX;
+            //    currentEndY = item.EndY;
+
+            //    if (prevStartX == double.NaN && prevStartY == double.NaN)
+            //    {
+            //        tempItemList.Add(item);
+            //        outsideCutList.Remove(item);
+
+            //        prevStartX = currentStartX;
+            //        prevStartY = currentStartY;
+            //        prevEndX = currentEndX;
+            //        prevEndY = currentEndY;
+
+            //        continue;
+            //    }
+            //    if (currentStartX == prevEndX && currentStartY == prevEndY)
+            //    {
+            //        tempItemList.Add(item);
+            //        outsideCutList.Remove(item);
+
+            //        prevStartX = currentStartX;
+            //        prevStartY = currentStartY;
+            //        prevEndX = currentEndX;
+            //        prevEndY = currentEndY;
+            //    }
+
+            //}
         }
         #endregion
     }

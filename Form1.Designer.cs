@@ -32,6 +32,9 @@
             this.Btn_NcCreate = new System.Windows.Forms.Button();
             this.original_code = new System.Windows.Forms.RichTextBox();
             this.converted_code = new System.Windows.Forms.RichTextBox();
+            this.markItems = new System.Windows.Forms.RichTextBox();
+            this.outsideItems = new System.Windows.Forms.RichTextBox();
+            this.insideItems = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // Btn_OpenFile
@@ -70,11 +73,38 @@
             this.converted_code.TabIndex = 1;
             this.converted_code.Text = "";
             // 
+            // markItems
+            // 
+            this.markItems.Location = new System.Drawing.Point(794, 326);
+            this.markItems.Name = "markItems";
+            this.markItems.Size = new System.Drawing.Size(337, 112);
+            this.markItems.TabIndex = 2;
+            this.markItems.Text = "";
+            // 
+            // outsideItems
+            // 
+            this.outsideItems.Location = new System.Drawing.Point(794, 208);
+            this.outsideItems.Name = "outsideItems";
+            this.outsideItems.Size = new System.Drawing.Size(337, 112);
+            this.outsideItems.TabIndex = 3;
+            this.outsideItems.Text = "";
+            // 
+            // insideItems
+            // 
+            this.insideItems.Location = new System.Drawing.Point(794, 90);
+            this.insideItems.Name = "insideItems";
+            this.insideItems.Size = new System.Drawing.Size(337, 112);
+            this.insideItems.TabIndex = 4;
+            this.insideItems.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1309, 450);
+            this.Controls.Add(this.insideItems);
+            this.Controls.Add(this.outsideItems);
+            this.Controls.Add(this.markItems);
             this.Controls.Add(this.converted_code);
             this.Controls.Add(this.original_code);
             this.Controls.Add(this.Btn_NcCreate);
@@ -91,6 +121,9 @@
         private System.Windows.Forms.Button Btn_NcCreate;
         private System.Windows.Forms.RichTextBox original_code;
         private System.Windows.Forms.RichTextBox converted_code;
+        private System.Windows.Forms.RichTextBox markItems;
+        private System.Windows.Forms.RichTextBox outsideItems;
+        private System.Windows.Forms.RichTextBox insideItems;
     }
 }
 
