@@ -120,9 +120,9 @@ namespace ncCreate
             SortData(entitiesList);
 
             // Add the End Sequence to the code
-            coordinateList.Add("G130");
-            coordinateList.Add("/M707");
-            coordinateList.Add("G50");
+            //coordinateList.Add("G130");
+            //coordinateList.Add("/M707");
+            //coordinateList.Add("G50");
             converted_code.Lines = coordinateList.ToArray();
         }
 
