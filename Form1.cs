@@ -15,6 +15,10 @@ namespace ncCreate
         List<Entities> entitiesList = new List<Entities>();
         int entitiesLine = 0;
         int endsecLine = 0;
+        List<Entities> etchingList = new List<Entities>();
+        List<Entities> insideCutList = new List<Entities>();
+        List<Entities> outsideCutList = new List<Entities>();
+        List<Entities> notClassifiedList = new List<Entities>();
 
         public Form1()
         {
@@ -118,11 +122,6 @@ namespace ncCreate
             }
 
             SortData(entitiesList);
-
-            // Add the End Sequence to the code
-            //coordinateList.Add("G130");
-            //coordinateList.Add("/M707");
-            //coordinateList.Add("G50");
             converted_code.Lines = coordinateList.ToArray();
         }
 
@@ -140,7 +139,6 @@ namespace ncCreate
             /// I = radius(40)
             /// J = Y direction distance from starting point to arc center
 
-            /// We will always pierce at center and move left to quad, then run the x, y, i, j command
             Circle circle = new Circle
             {
                 Layer = dxfList[iCircle + 8],
@@ -151,20 +149,34 @@ namespace ncCreate
 
             entitiesList.Add(circle);
 
-            if (circle.Layer == "INSIDE")
+            if (circle.Layer == "DADO" || circle.Layer == "MARK")
             {
-                // Inside circle Pierce, always pierce in center, G01 to edge, then process circle
+
+                coordinateList.Add("Mark Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
+            }
+            else if (circle.Layer == "INSIDE")
+            {
                 coordinateList.Add("Inside Circle x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
             }
-
-            if (circle.Layer == "OUTSIDE")
+            else if (circle.Layer == "OUTSIDE")
             {
-                // Outside circle pierce, always pierce outside 0.125 horizontal
                 coordinateList.Add("Outside Circle x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
+            }
+            else if (circle.Layer == "0")
+            {
+                coordinateList.Add("Not Classified Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
+            }
+            else
+            {
+                MessageBox.Show($"Arc layer not regocnized on line { iCircle + 8}");
             }
         }
 
@@ -195,17 +207,29 @@ namespace ncCreate
             arc.EndY = arc.CenterY + (arc.Radius * (Math.Sin(arc.EndAngle)));
 
             entitiesList.Add(arc);
-
-            if (arc.Layer == "INSIDE")
+            if (arc.Layer == "DADO" || arc.Layer == "MARK")
+            {
+                coordinateList.Add($"Mark Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                coordinateList.Add($"Mark Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+            }
+            else if (arc.Layer == "INSIDE")
             {
                 coordinateList.Add($"Inside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"Inside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
-
-            if (arc.Layer == "OUTSIDE")
+            else if (arc.Layer == "OUTSIDE")
             {
                 coordinateList.Add($"Outside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"Outside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+            }
+            else if (arc.Layer == "0")
+            {
+                coordinateList.Add($"Not Classified Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                coordinateList.Add($"Not Classified Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+            }
+            else
+            {
+                MessageBox.Show($"Arc layer not regocnized on line { iArc + 8}");
             }
         }
 
@@ -220,36 +244,40 @@ namespace ncCreate
 
             Line line = new Line();
             line.Layer = dxfList[iLine + 8];
-            line.StartX = Convert.ToDouble(dxfList[iLine + 12]);
-            line.StartY = Convert.ToDouble(dxfList[iLine + 14]);
-            line.EndX = Convert.ToDouble(dxfList[iLine + 18]);
-            line.EndY = Convert.ToDouble(dxfList[iLine + 20]);
+            line.StartX = double.Parse(dxfList[iLine + 12]);
+            line.StartY = double.Parse(dxfList[iLine + 14]);
+            line.EndX = double.Parse(dxfList[iLine + 18]);
+            line.EndY = double.Parse(dxfList[iLine + 20]);
             entitiesList.Add(line);
 
-            if (line.Layer == "INSIDE")
+            if (line.Layer == "DADO" || line.Layer == "MARK")
+            {
+                coordinateList.Add("Mark Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                coordinateList.Add("Mark Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
+            }
+            else if (line.Layer == "INSIDE")
             {
                 coordinateList.Add("Inside Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
                 coordinateList.Add("Inside Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
             }
-
-            if (line.Layer == "OUTSIDE")
+            else if (line.Layer == "OUTSIDE")
             {
                 coordinateList.Add("Outside Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
-
                 coordinateList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+            }
+            else if (line.Layer == "0")
+            {
+                coordinateList.Add("Not Classified Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                coordinateList.Add("Not Classified Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+            }
+            else
+            {
+                MessageBox.Show($"line layer not regocnized on line { iLine + 8}");
             }
         }
 
         public void SortData(List<Entities> itemsList)
         {
-            List<Entities> tempItemList = new List<Entities>();
-            tempItemList = itemsList;
-
-            LaserFeature feature = new LaserFeature();
-            List<Entities> etchingList = new List<Entities>();
-            List<Entities> insideCutList = new List<Entities>();
-            List<Entities> outsideCutList = new List<Entities>();
-
             foreach (var item in itemsList)
             {
                 if (item.Layer.ToLower() == "mark" || item.Layer.ToLower() == "dado")
@@ -263,6 +291,10 @@ namespace ncCreate
                 else if (item.Layer.ToLower() == "outside")
                 {
                     outsideCutList.Add(item);
+                }
+                else
+                {
+                    notClassifiedList.Add(item);
                 }
             }
 
