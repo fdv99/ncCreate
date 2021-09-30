@@ -170,7 +170,7 @@ namespace ncCreate
             }
             else if (circle.Layer == "0")
             {
-                coordinateList.Add("Not Classified Circle x" + Math.Round(circle.CenterX, 4) +
+                coordinateList.Add("0 Layer x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
             }
@@ -224,8 +224,8 @@ namespace ncCreate
             }
             else if (arc.Layer == "0")
             {
-                coordinateList.Add($"Not Classified Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
-                coordinateList.Add($"Not Classified Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+                coordinateList.Add($"0 Layer Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                coordinateList.Add($"0 Layer Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
             else
             {
@@ -267,8 +267,8 @@ namespace ncCreate
             }
             else if (line.Layer == "0")
             {
-                coordinateList.Add("Not Classified Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
-                coordinateList.Add("Not Classified Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                coordinateList.Add("0 Layer Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                coordinateList.Add("0 Layer Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
             else
             {
