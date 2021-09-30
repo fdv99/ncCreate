@@ -35,6 +35,11 @@
             this.markItems = new System.Windows.Forms.RichTextBox();
             this.outsideItems = new System.Windows.Forms.RichTextBox();
             this.insideItems = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.notClassifiedBox = new System.Windows.Forms.RichTextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Btn_OpenFile
@@ -75,7 +80,7 @@
             // 
             // markItems
             // 
-            this.markItems.Location = new System.Drawing.Point(794, 326);
+            this.markItems.Location = new System.Drawing.Point(794, 312);
             this.markItems.Name = "markItems";
             this.markItems.Size = new System.Drawing.Size(337, 112);
             this.markItems.TabIndex = 2;
@@ -83,7 +88,7 @@
             // 
             // outsideItems
             // 
-            this.outsideItems.Location = new System.Drawing.Point(794, 208);
+            this.outsideItems.Location = new System.Drawing.Point(794, 172);
             this.outsideItems.Name = "outsideItems";
             this.outsideItems.Size = new System.Drawing.Size(337, 112);
             this.outsideItems.TabIndex = 3;
@@ -91,19 +96,68 @@
             // 
             // insideItems
             // 
-            this.insideItems.Location = new System.Drawing.Point(794, 90);
+            this.insideItems.Location = new System.Drawing.Point(794, 28);
             this.insideItems.Name = "insideItems";
             this.insideItems.Size = new System.Drawing.Size(337, 112);
             this.insideItems.TabIndex = 4;
             this.insideItems.Text = "";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(794, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Inside Items";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(791, 156);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Outside Items";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(794, 296);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Mark Items";
+            // 
+            // notClassifiedBox
+            // 
+            this.notClassifiedBox.Location = new System.Drawing.Point(794, 446);
+            this.notClassifiedBox.Name = "notClassifiedBox";
+            this.notClassifiedBox.Size = new System.Drawing.Size(337, 112);
+            this.notClassifiedBox.TabIndex = 2;
+            this.notClassifiedBox.Text = "";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(794, 430);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(71, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Not Classified";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1309, 450);
+            this.ClientSize = new System.Drawing.Size(1173, 570);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.insideItems);
             this.Controls.Add(this.outsideItems);
+            this.Controls.Add(this.notClassifiedBox);
             this.Controls.Add(this.markItems);
             this.Controls.Add(this.converted_code);
             this.Controls.Add(this.original_code);
@@ -112,6 +166,7 @@
             this.Name = "Form1";
             this.Text = "V6 Laser CNC";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -124,6 +179,11 @@
         private System.Windows.Forms.RichTextBox markItems;
         private System.Windows.Forms.RichTextBox outsideItems;
         private System.Windows.Forms.RichTextBox insideItems;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RichTextBox notClassifiedBox;
+        private System.Windows.Forms.Label label4;
     }
 }
 

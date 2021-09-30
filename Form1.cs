@@ -15,10 +15,10 @@ namespace ncCreate
         List<Entities> entitiesList = new List<Entities>();
         int entitiesLine = 0;
         int endsecLine = 0;
-        List<Entities> etchingList = new List<Entities>();
-        List<Entities> insideCutList = new List<Entities>();
-        List<Entities> outsideCutList = new List<Entities>();
-        List<Entities> notClassifiedList = new List<Entities>();
+        List<string> etchingList = new List<string>();
+        List<string> insideCutList = new List<string>();
+        List<string> outsideCutList = new List<string>();
+        List<string> notClassifiedList = new List<string>();
 
         public Form1()
         {
@@ -121,8 +121,12 @@ namespace ncCreate
                 }
             }
 
-            SortData(entitiesList);
+            //SortData(entitiesList);
             converted_code.Lines = coordinateList.ToArray();
+            insideItems.Lines = insideCutList.ToArray();
+            outsideItems.Lines = outsideCutList.ToArray();
+            markItems.Lines = etchingList.ToArray();
+            notClassifiedBox.Lines = notClassifiedList.ToArray();
         }
 
         #region EntityMethods
@@ -155,10 +159,16 @@ namespace ncCreate
                 coordinateList.Add("Mark Circle x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
+                etchingList.Add("Mark Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
             }
             else if (circle.Layer == "INSIDE")
             {
                 coordinateList.Add("Inside Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
+                insideCutList.Add("Inside Circle x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
             }
@@ -167,10 +177,16 @@ namespace ncCreate
                 coordinateList.Add("Outside Circle x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
+                outsideCutList.Add("Outside Circle x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
             }
             else if (circle.Layer == "0")
             {
                 coordinateList.Add("0 Layer x" + Math.Round(circle.CenterX, 4) +
+                    " Y" + Math.Round(circle.CenterY, 4) +
+                    " R" + Math.Round(circle.Radius, 4));
+                notClassifiedList.Add("0 Layer x" + Math.Round(circle.CenterX, 4) +
                     " Y" + Math.Round(circle.CenterY, 4) +
                     " R" + Math.Round(circle.Radius, 4));
             }
@@ -211,21 +227,29 @@ namespace ncCreate
             {
                 coordinateList.Add($"Mark Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"Mark Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+                etchingList.Add($"Mark Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                etchingList.Add($"Mark Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
             else if (arc.Layer == "INSIDE")
             {
                 coordinateList.Add($"Inside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"Inside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+                insideCutList.Add($"Inside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                insideCutList.Add($"Inside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
             else if (arc.Layer == "OUTSIDE")
             {
                 coordinateList.Add($"Outside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"Outside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+                outsideCutList.Add($"Outside Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                outsideCutList.Add($"Outside Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
             else if (arc.Layer == "0")
             {
                 coordinateList.Add($"0 Layer Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
                 coordinateList.Add($"0 Layer Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
+                notClassifiedList.Add($"0 Layer Arc Start X{arc.StartX} Y{arc.StartY} R{arc.Radius}");
+                notClassifiedList.Add($"0 Layer Arc Finish X{arc.EndX} Y{arc.EndY} R{arc.Radius}");
             }
             else
             {
@@ -254,21 +278,29 @@ namespace ncCreate
             {
                 coordinateList.Add("Mark Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
                 coordinateList.Add("Mark Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
+                etchingList.Add("Mark Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                etchingList.Add("Mark Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
             }
             else if (line.Layer == "INSIDE")
             {
                 coordinateList.Add("Inside Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
                 coordinateList.Add("Inside Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
+                insideCutList.Add("Inside Line Start x" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                insideCutList.Add("Inside Line Finish x" + Math.Round(line.EndX, 4) + " Y" + Math.Round(line.EndY, 4));
             }
             else if (line.Layer == "OUTSIDE")
             {
                 coordinateList.Add("Outside Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
                 coordinateList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                outsideCutList.Add("Outside Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                outsideCutList.Add("Outside Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
             else if (line.Layer == "0")
             {
                 coordinateList.Add("0 Layer Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
                 coordinateList.Add("0 Layer Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                notClassifiedList.Add("0 Layer Line Start X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
+                notClassifiedList.Add("0 Layer Line Finish X" + Math.Round(line.StartX, 4) + " Y" + Math.Round(line.StartY, 4));
             }
             else
             {
@@ -276,69 +308,31 @@ namespace ncCreate
             }
         }
 
-        public void SortData(List<Entities> itemsList)
-        {
-            foreach (var item in itemsList)
-            {
-                if (item.Layer.ToLower() == "mark" || item.Layer.ToLower() == "dado")
-                {
-                    etchingList.Add(item);
-                }
-                else if (item.Layer.ToLower() == "inside")
-                {
-                    insideCutList.Add(item);
-                }
-                else if (item.Layer.ToLower() == "outside")
-                {
-                    outsideCutList.Add(item);
-                }
-                else
-                {
-                    notClassifiedList.Add(item);
-                }
-            }
+        //public void SortData(List<Entities> itemsList)
+        //{
+        //    foreach (var item in itemsList)
+        //    {
+        //        if (item.Layer.ToLower() == "mark" || item.Layer.ToLower() == "dado")
+        //        {
+        //            etchingList.Add(item);
+        //        }
+        //        else if (item.Layer.ToLower() == "inside")
+        //        {
+        //            insideCutList.Add(item);
+        //        }
+        //        else if (item.Layer.ToLower() == "outside")
+        //        {
+        //            outsideCutList.Add(item);
+        //        }
+        //        else
+        //        {
+        //            notClassifiedList.Add(item);
+        //        }
+        //    }
+        //    insideItems.Lines = etchingList.ToArray();
 
-            //double prevStartX = double.NaN;
-            //double prevStartY = double.NaN;
-            //double prevEndX = double.NaN;
-            //double prevEndY = double.NaN;
-            //double currentStartX = double.NaN;
-            //double currentStartY = double.NaN;
-            //double currentEndX = double.NaN;
-            //double currentEndY = double.NaN;
 
-            //foreach (var item in outsideCutList)
-            //{
-            //    currentStartX = item.StartX;
-            //    currentStartY = item.StartY;
-            //    currentEndX = item.EndX;
-            //    currentEndY = item.EndY;
-
-            //    if (prevStartX == double.NaN && prevStartY == double.NaN)
-            //    {
-            //        tempItemList.Add(item);
-            //        outsideCutList.Remove(item);
-
-            //        prevStartX = currentStartX;
-            //        prevStartY = currentStartY;
-            //        prevEndX = currentEndX;
-            //        prevEndY = currentEndY;
-
-            //        continue;
-            //    }
-            //    if (currentStartX == prevEndX && currentStartY == prevEndY)
-            //    {
-            //        tempItemList.Add(item);
-            //        outsideCutList.Remove(item);
-
-            //        prevStartX = currentStartX;
-            //        prevStartY = currentStartY;
-            //        prevEndX = currentEndX;
-            //        prevEndY = currentEndY;
-            //    }
-
-            //}
-        }
+        //}
         #endregion
     }
 
