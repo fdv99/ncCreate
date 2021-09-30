@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+// If you run the program on the dxf files in the project directory, need to find a way to sore the one with SW layers.
+
 namespace ncCreate
 {
     public partial class Form1 : Form
